@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./clients/main"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MAIN_DATABASE_URI")
+}
+
+enum RoleType {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email    String   @unique
+  password String
+  role     RoleType @default(USER)
+  name     String?
+}
+
+enum AuditLogContextEnum {
+  http
+  ws
+  rpc
+}
+
+enum AuditLogRequestMethodEnum {
+  get
+  post
+  put
+  patch
+  delete
+}
+
+model AuditLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId  String
+  context AuditLogContextEnum
+  method  AuditLogRequestMethodEnum?
+  event   String
+  data    Json?
+}

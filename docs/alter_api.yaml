@@ -1,0 +1,36 @@
+openapi: 3.0.0
+paths:
+  /api/auth/register:
+    post:
+      operationId: AuthController_createUser
+      parameters: []
+      responses:
+        "201":
+          description: ""
+      tags: &a1
+        - api/auth
+  /api/auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      responses:
+        "201":
+          description: ""
+      tags: *a1
+  /api/auth/password:
+    post:
+      operationId: AuthController_updatePassword
+      parameters: []
+      responses:
+        "201":
+          description: ""
+      tags: *a1
+info:
+  title: Alter API
+  description: API Documentation for Alter
+  version: "1.0"
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas: {}

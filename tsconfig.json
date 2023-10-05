@@ -1,0 +1,108 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@lib/prisma": [
+        "libs/prisma/src"
+      ],
+      "@lib/prisma/*": [
+        "libs/prisma/src/*"
+      ],
+      "@lib/decorators": [
+        "libs/decorators/src"
+      ],
+      "@lib/decorators/*": [
+        "libs/decorators/src/*"
+      ],
+      "@lib/interceptors": [
+        "libs/interceptors/src"
+      ],
+      "@lib/interceptors/*": [
+        "libs/interceptors/src/*"
+      ],
+      "@lib/filters": [
+        "libs/filters/src"
+      ],
+      "@lib/filters/*": [
+        "libs/filters/src/*"
+      ],
+      "@lib/guards": [
+        "libs/guards/src"
+      ],
+      "@lib/guards/*": [
+        "libs/guards/src/*"
+      ],
+      "@lib/common": [
+        "libs/common/src"
+      ],
+      "@lib/common/*": [
+        "libs/common/src/*"
+      ],
+      "@lib/logger": [
+        "libs/logger/src"
+      ],
+      "@lib/logger/*": [
+        "libs/logger/src/*"
+      ],
+      "@lib/config": [
+        "libs/config/src"
+      ],
+      "@lib/config/*": [
+        "libs/config/src/*"
+      ],
+      "@lib/scheduler": [
+        "libs/scheduler/src"
+      ],
+      "@lib/scheduler/*": [
+        "libs/scheduler/src/*"
+      ],
+      "@lib/middlewares": [
+        "libs/middlewares/src"
+      ],
+      "@lib/middlewares/*": [
+        "libs/middlewares/src/*"
+      ],
+      "@lib/health": [
+        "libs/health/src"
+      ],
+      "@lib/health/*": [
+        "libs/health/src/*"
+      ],
+      "@lib/audit.logger": [
+        "libs/audit.logger/src"
+      ],
+      "@lib/audit.logger/*": [
+        "libs/audit.logger/src/*"
+      ],
+      "@lib/errors": [
+        "libs/errors/src"
+      ],
+      "@lib/errors/*": [
+        "libs/errors/src/*"
+      ],
+      "@lib/service.registry": [
+        "libs/service.registry/src"
+      ],
+      "@lib/service.registry/*": [
+        "libs/service.registry/src/*"
+      ]
+    }
+  }
+}
