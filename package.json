@@ -16,12 +16,15 @@
     "start:all": "node ./scripts/start.mjs",
     "start:all:dev": "cross-env NODE_ENV=development node ./scripts/start.mjs",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "dotenv:prod": "dotenv -e ./env/production.env --",
+    "dotenv:dev": "dotenv -e ./env/development.env --",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/gateway/test/jest-e2e.json",
-    "prisma:generate": "pnpm prisma generate --schema=./libs/prisma/schema.prisma"
+    "prisma:generate": "pnpm prisma generate --schema=./libs/prisma/schema.prisma",
+    "prisma:push": "cross-env NODE_ENV=development pnpm dotenv:dev prisma db push --schema=./libs/prisma/schema.prisma"
   },
   "dependencies": {
     "@liaoliaots/nestjs-redis": "9.0.5",
@@ -71,6 +74,7 @@
     "concurrently": "8.2.1",
     "cross-env": "7.0.3",
     "dotenv": "16.3.1",
+    "dotenv-cli": "7.3.0",
     "eslint": "8.50.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-prettier": "5.0.0",
