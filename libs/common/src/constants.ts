@@ -14,6 +14,8 @@ export class SwaggerConstants {
 export const USER_UUID_HEADER = 'x-user-uuid';
 export const AUTHORIZATION_PREFIX = 'Bearer ';
 
+export const TIMEOUT_DEFAULT = 60_000;
+
 /**
  * custom cache headers
  */
