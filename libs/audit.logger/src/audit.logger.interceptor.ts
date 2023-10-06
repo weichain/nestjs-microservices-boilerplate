@@ -1,3 +1,4 @@
+import { IRequest } from '@lib/common';
 import { AUDIT_LOGGER_LEVEL, AuditLogLevelOption } from '@lib/decorators';
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -30,9 +31,7 @@ export class AuditLoggerInterceptor implements NestInterceptor {
   }
 
   private async logHttp(context: ExecutionContext, next: CallHandler, level: AuditLogLevelOption | null): Promise<Observable<any>> {
-    // TODO: get user id
-    // const user = getUser(context);
-    const user = 'test-user-id';
+    const user = context.switchToHttp().getRequest<IRequest>().user?.id;
 
     if (!user) {
       return next.handle();
