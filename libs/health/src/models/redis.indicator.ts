@@ -22,7 +22,6 @@ export class RedisIndicator extends BaseHealthIndicator {
   public async isHealthy(): Promise<HealthIndicatorResult> {
     try {
       const check = await this.redisIndicator.checkHealth(this.name, { type: 'redis', client: this.redis, timeout: 5_000 });
-      this.redis.disconnect();
       return check;
     } catch (e) {
       throw new HealthCheckError('RedisIndicator failed', this.getStatus(this.name, false, { message: e.message }));
