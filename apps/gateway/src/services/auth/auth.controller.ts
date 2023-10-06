@@ -1,10 +1,17 @@
-import { AuthMessagePatterns, Microservices } from '@lib/common';
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { AuthMessagePatterns, IRequest, Microservices } from '@lib/common';
+import {
+  UserLoginRequestDto,
+  UserLoginResponseDto,
+  UserRegisterRequestDto,
+  UserRegisterResponseDto,
+  UserUpdatePasswordRequestDto,
+  UserUpdatePasswordResponseDto,
+} from '@lib/dtos';
+import JwtAuthGuard from '@lib/guards/jwt.guard';
+import { Body, Controller, HttpCode, HttpStatus, Inject, Post, Request, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { firstValueFrom } from 'rxjs';
-
-// TODO: add DTOs and guards
 
 @ApiTags('api/auth')
 @Controller('api/auth')
@@ -12,17 +19,32 @@ export class AuthController {
   constructor(@Inject(Microservices.AUTH) private readonly authServiceProxy: ClientProxy) {}
 
   @Post('register')
-  public async createUser(@Body() data) {
-    return firstValueFrom(this.authServiceProxy.send({ cmd: AuthMessagePatterns.register }, { data }));
+  @HttpCode(HttpStatus.OK)
+  @ApiBody({ type: UserRegisterRequestDto })
+  @ApiOkResponse({ type: UserRegisterResponseDto })
+  public async createUser(@Body() data: UserRegisterRequestDto): Promise<UserRegisterResponseDto> {
+    return firstValueFrom<UserRegisterResponseDto>(this.authServiceProxy.send({ cmd: AuthMessagePatterns.register }, { data }));
   }
 
   @Post('login')
-  public async login(@Body() data) {
-    return firstValueFrom(this.authServiceProxy.send({ cmd: AuthMessagePatterns.login }, { data }));
+  @HttpCode(HttpStatus.OK)
+  @ApiBody({ type: UserLoginRequestDto })
+  @ApiOkResponse({ type: UserLoginResponseDto })
+  public async login(@Body() data: UserLoginRequestDto): Promise<UserLoginResponseDto> {
+    return firstValueFrom<UserLoginResponseDto>(this.authServiceProxy.send({ cmd: AuthMessagePatterns.login }, { data }));
   }
 
   @Post('password')
-  public async updatePassword(@Body() data) {
-    return firstValueFrom(this.authServiceProxy.send({ cmd: AuthMessagePatterns.updatePassword }, { data }));
+  @HttpCode(HttpStatus.OK)
+  @ApiBody({ type: UserUpdatePasswordRequestDto })
+  @ApiOkResponse({ type: UserUpdatePasswordResponseDto })
+  @UseGuards(JwtAuthGuard)
+  public async updatePassword(
+    @Body() data: UserUpdatePasswordRequestDto,
+    @Request() req: IRequest,
+  ): Promise<UserUpdatePasswordResponseDto> {
+    return firstValueFrom<UserUpdatePasswordResponseDto>(
+      this.authServiceProxy.send({ cmd: AuthMessagePatterns.updatePassword }, { id: req.user.id, data }),
+    );
   }
 }

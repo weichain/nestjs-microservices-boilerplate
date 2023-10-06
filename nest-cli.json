@@ -64,15 +64,6 @@
         "tsConfigPath": "libs/filters/tsconfig.lib.json"
       }
     },
-    "guards": {
-      "type": "library",
-      "root": "libs/guards",
-      "entryFile": "index",
-      "sourceRoot": "libs/guards/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/guards/tsconfig.lib.json"
-      }
-    },
     "common": {
       "type": "library",
       "root": "libs/common",
@@ -152,6 +143,33 @@
       "sourceRoot": "libs/service.registry/src",
       "compilerOptions": {
         "tsConfigPath": "libs/service.registry/tsconfig.lib.json"
+      }
+    },
+    "metrics": {
+      "type": "library",
+      "root": "libs/metrics",
+      "entryFile": "index",
+      "sourceRoot": "libs/metrics/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/metrics/tsconfig.lib.json"
+      }
+    },
+    "dtos": {
+      "type": "library",
+      "root": "libs/dtos",
+      "entryFile": "index",
+      "sourceRoot": "libs/dtos/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/dtos/tsconfig.lib.json"
+      }
+    },
+    "guards": {
+      "type": "library",
+      "root": "libs/guards",
+      "entryFile": "index",
+      "sourceRoot": "libs/guards/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/guards/tsconfig.lib.json"
       }
     }
   }

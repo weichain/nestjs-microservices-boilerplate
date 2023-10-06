@@ -26,7 +26,7 @@ export class AuthController {
   }
 
   @MessagePattern({ cmd: AuthMessagePatterns.updatePassword })
-  public async updatePassword(input: { userUuid: string; data: UserUpdatePasswordRequestDto }): Promise<UserUpdatePasswordResponseDto> {
-    return this.authService.updatePassword(input.userUuid, input.data);
+  public async updatePassword(input: { id: string; data: UserUpdatePasswordRequestDto }): Promise<UserUpdatePasswordResponseDto> {
+    return this.authService.updatePassword(input.id, input.data);
   }
 }

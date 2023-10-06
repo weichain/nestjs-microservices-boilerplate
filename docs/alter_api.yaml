@@ -4,27 +4,64 @@ paths:
     post:
       operationId: AuthController_createUser
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegisterRequestDto"
       responses:
-        "201":
+        "200":
           description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserRegisterResponseDto"
       tags: &a1
         - api/auth
   /api/auth/login:
     post:
       operationId: AuthController_login
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLoginRequestDto"
       responses:
-        "201":
+        "200":
           description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserLoginResponseDto"
       tags: *a1
   /api/auth/password:
     post:
       operationId: AuthController_updatePassword
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdatePasswordRequestDto"
       responses:
-        "201":
+        "200":
           description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserUpdatePasswordResponseDto"
       tags: *a1
+  /metrics:
+    get:
+      operationId: PrometheusController_index
+      parameters: []
+      responses:
+        "200":
+          description: ""
 info:
   title: Alter API
   description: API Documentation for Alter
@@ -33,4 +70,22 @@ info:
 tags: []
 servers: []
 components:
-  schemas: {}
+  schemas:
+    UserRegisterRequestDto:
+      type: object
+      properties: {}
+    UserRegisterResponseDto:
+      type: object
+      properties: {}
+    UserLoginRequestDto:
+      type: object
+      properties: {}
+    UserLoginResponseDto:
+      type: object
+      properties: {}
+    UserUpdatePasswordRequestDto:
+      type: object
+      properties: {}
+    UserUpdatePasswordResponseDto:
+      type: object
+      properties: {}

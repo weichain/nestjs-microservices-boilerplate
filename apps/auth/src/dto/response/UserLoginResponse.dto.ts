@@ -1,14 +1,10 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class UserLoginResponseDto {
-  @IsNumber()
-  expiresIn: number;
-
   @IsString()
   accessToken: string;
 
-  constructor(data: { expiresIn: number; accessToken: string }) {
-    this.expiresIn = data.expiresIn;
+  constructor(data: { accessToken: string }) {
     this.accessToken = data.accessToken;
   }
 }

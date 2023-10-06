@@ -1,3 +1,4 @@
+import { GlobalRpcExceptionFilter } from '@lib/filters';
 import { useLogger } from '@lib/logger';
 import { ServiceRegistry } from '@lib/service.registry';
 import { ValidationPipe } from '@nestjs/common';
@@ -28,13 +29,18 @@ export async function microserviceSetup<M extends NestJsModule>(module: M, optio
 
   await app.init();
 
+  app.useGlobalFilters(new GlobalRpcExceptionFilter());
+
   // enables graceful shutdown
   app.enableShutdownHooks();
   // sets the global validation pipe
   app.useGlobalPipes(new ValidationPipe({ transform: true, forbidUnknownValues: false }));
 
   // creates a microservice instance
-  const microservice = app.connectMicroservice({ transport: Transport.TCP, options: { host, port, retryAttempts, retryDelay } });
+  const microservice = app.connectMicroservice(
+    { transport: Transport.TCP, options: { host, port, retryAttempts, retryDelay } },
+    { inheritAppConfig: true },
+  );
   return { app: await app.startAllMicroservices(), microservice };
 }
 

@@ -74,7 +74,6 @@ export class AuthService {
     }
 
     return new UserLoginResponseDto({
-      expiresIn: 24,
       accessToken: await this.jwtService.signAsync({
         email: user.email,
         type: TokenType.ACCESS_TOKEN,

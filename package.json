@@ -29,11 +29,13 @@
     "@nestjs/core": "10.2.6",
     "@nestjs/jwt": "10.1.1",
     "@nestjs/microservices": "10.2.6",
+    "@nestjs/passport": "10.0.2",
     "@nestjs/platform-express": "10.2.6",
     "@nestjs/schedule": "3.0.4",
     "@nestjs/swagger": "7.1.13",
     "@nestjs/terminus": "10.1.1",
     "@prisma/client": "5.4.1",
+    "@willsoto/nestjs-prometheus": "5.5.1",
     "argon2": "0.31.1",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
@@ -45,8 +47,10 @@
     "lodash": "4.17.21",
     "luxon": "3.4.3",
     "nestjs-pino": "3.5.0",
+    "passport-jwt": "4.0.1",
     "pino-pretty": "10.2.3",
     "prisma-field-encryption": "1.5.0",
+    "prom-client": "14.2.0",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.1",
     "uuid": "9.0.1",
@@ -106,7 +110,6 @@
       "^@lib/decorators(|/.*)$": "<rootDir>/libs/decorators/src/$1",
       "^@lib/interceptors(|/.*)$": "<rootDir>/libs/interceptors/src/$1",
       "^@lib/filters(|/.*)$": "<rootDir>/libs/filters/src/$1",
-      "^@lib/guards(|/.*)$": "<rootDir>/libs/guards/src/$1",
       "^@lib/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@lib/logger(|/.*)$": "<rootDir>/libs/logger/src/$1",
       "^@lib/config(|/.*)$": "<rootDir>/libs/config/src/$1",
@@ -115,7 +118,10 @@
       "^@lib/health(|/.*)$": "<rootDir>/libs/health/src/$1",
       "^@lib/audit.logger(|/.*)$": "<rootDir>/libs/audit.logger/src/$1",
       "^@lib/errors(|/.*)$": "<rootDir>/libs/errors/src/$1",
-      "^@lib/service.registry(|/.*)$": "<rootDir>/libs/service.registry/src/$1"
+      "^@lib/service.registry(|/.*)$": "<rootDir>/libs/service.registry/src/$1",
+      "^@lib/metrics(|/.*)$": "<rootDir>/libs/metrics/src/$1",
+      "^@lib/dtos(|/.*)$": "<rootDir>/libs/dtos/src/$1",
+      "^@lib/guards(|/.*)$": "<rootDir>/libs/guards/src/$1"
     }
   }
 }

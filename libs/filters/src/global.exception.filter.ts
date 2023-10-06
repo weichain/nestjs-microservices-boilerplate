@@ -1,4 +1,4 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Logger } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 export interface IHttpErrorResponse {
@@ -17,44 +17,42 @@ export interface IHttpErrorResponse {
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
 
-  constructor() {
-    // TODO: add Sentry
-  }
+  constructor() {}
 
   async catch(exception: any, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const request = ctx.getRequest<Request>();
-    const response = ctx.getResponse<Response>();
+    this.logger.log(exception);
 
-    const headers = request.headers;
-    if (headers) {
-      delete headers.authorization;
-      delete headers.cookie;
-      // TODO: delete sensitive headers before sending to 3rd party
+    if (exception instanceof HttpException) {
+      this.handleHttpException(exception, host);
+    } else if (exception.type === 'RPC') {
+      this.handleHttpException(
+        new InternalServerErrorException({ error: 'RpcError', message: exception.error.message, code: exception.error.code }),
+        host,
+      );
+    } else {
+      this.logger.error('Unhandled Exception');
+      this.logger.error(`${exception.name}: ${exception.message}`, exception.stack);
+      this.handleHttpException(new InternalServerErrorException({ message: 'UnhandledException' }), host);
+    }
+  }
+
+  private handleHttpException(exception: HttpException, host: ArgumentsHost) {
+    const contextType = host.getType();
+    if (contextType === 'http') {
+      const ctx = host.switchToHttp();
+      const status = exception.getStatus();
+      const httpRes: Response = ctx.getResponse();
+      const httpReq: Request = ctx.getRequest();
+
+      const res = exception.getResponse();
+
+      this.logger.error(`${exception.getStatus()} ${httpReq.method} ${httpReq.url} ${typeof res === 'object' ? JSON.stringify(res) : res}`);
+
+      httpRes.status(status).json(res);
+      return;
     }
 
-    // TODO: capture exception and send to Sentry
-
-    // http status code, return custom exception code or 500
-    const httpStatusCode = exception?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
-    const statusCode = exception?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
-    const errMsg: string = exception?.message || 'Internal server error';
-
-    // standard error response
-    const errorResponse: IHttpErrorResponse = {
-      success: false,
-      code: statusCode,
-      message: errMsg,
-    };
-
-    this.logger.error(
-      {
-        message: `request error: ${exception?.message || ''}`,
-        response: exception?.response || '',
-      },
-      exception?.stack || errMsg,
-    );
-
-    response.status(httpStatusCode).json(errorResponse);
+    this.logger.error(`HttpExceptionFilter was executed on a ${contextType} context`);
+    throw Error('Invalid context.');
   }
 }

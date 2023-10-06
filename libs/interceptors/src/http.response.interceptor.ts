@@ -23,8 +23,7 @@ export class HttpResponseInterceptor implements NestInterceptor {
         }
 
         return {
-          success: true,
-          code: HttpStatus.OK,
+          statusCode: HttpStatus.OK,
           message: DefaultStatusMessage.OK_MSG,
           data,
         };

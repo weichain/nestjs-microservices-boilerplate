@@ -38,14 +38,9 @@ async function bootstrap() {
   app.enableVersioning({ type: VersioningType.URI, prefix: 'v', defaultVersion: VERSION_NEUTRAL });
 
   /**
-   * set the global timeout for all requests to 60 seconds
+   * set the global interceptors
    */
-  app.useGlobalInterceptors(new TimeoutInterceptor(60_000));
-
-  /**
-   * set the global transform for all responses
-   */
-  app.useGlobalInterceptors(new HttpResponseInterceptor(), app.get(AuditLoggerInterceptor));
+  app.useGlobalInterceptors(new HttpResponseInterceptor(), app.get(AuditLoggerInterceptor), new TimeoutInterceptor(60_000));
 
   /**
    * Use performance middlewares
