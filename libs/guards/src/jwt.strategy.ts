@@ -11,7 +11,7 @@ interface AuthPayload {
 }
 
 interface AuthResponse {
-  id: string;
+  id: number;
 }
 
 @Injectable()

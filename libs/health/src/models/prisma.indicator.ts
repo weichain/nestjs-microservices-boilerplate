@@ -19,8 +19,9 @@ export class PrismaHealthIndicator extends BaseHealthIndicator {
 
   async isHealthy(): Promise<HealthIndicatorResult> {
     try {
-      const result = await timeout(this.prismaService.$runCommandRaw({ ping: 1 }), 10_000);
-      return this.getStatus(this.name, result.ok === 1);
+      const result: Array<object> = await timeout(this.prismaService.$queryRaw`SELECT 1`, 10_000);
+      const isHealthy = result.some((row) => Object.values(row).includes(1));
+      return this.getStatus(`postgresql ${this.name}`, isHealthy);
     } catch (e) {
       throw new HealthCheckError('Prisma check failed', e);
     }

@@ -90,7 +90,7 @@ export class AuthService {
    * @returns {Promise<UserResetPasswordResponse>} The updated user.
    * @throws {UserUpdateFailure} If the user cannot be updated.
    */
-  public async updatePassword(userId: string, data: UserUpdatePasswordRequestDto): Promise<UserUpdatePasswordResponseDto> {
+  public async updatePassword(userId: number, data: UserUpdatePasswordRequestDto): Promise<UserUpdatePasswordResponseDto> {
     const user = await this.prisma.user.findFirst({ where: { id: userId } });
 
     const validPassword = await verify(user.password, data.oldPassword);
