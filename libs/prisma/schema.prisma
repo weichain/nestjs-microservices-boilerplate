@@ -9,10 +9,233 @@ generator dbml {
   projectDatabaseType = "PostgreSQL"
 }
 
-// Configure the PostgreSQL database
 datasource db {
   provider = "postgresql"
   url      = env("MAIN_DATABASE_URI")
+}
+
+model AuditLog {
+  id Int @id @default(autoincrement())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId  String
+  context AuditLogContextEnum
+  method  AuditLogRequestMethodEnum?
+  event   String
+  data    Json?
+}
+
+model Therapy {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  name        String
+  description String?
+  duration    Int?
+  status      CurrenStatus
+
+  diagnosis   Diagnosis? @relation(fields: [diagnosisId], references: [id])
+  diagnosisId Int?
+  condition   Condition? @relation(fields: [conditionId], references: [id])
+  conditionId Int?
+
+  patient Patient[] // Reverse relation to Patient
+
+  // Many-to-many relationships
+  patientTherapies PatientTherapies[]
+  doctorTherapies  DoctorTherapies[]
+  taskTherapy      TaskTherapy[]
+}
+
+model Diagnosis {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  name        String
+  description String?
+  status      CurrenStatus
+
+  therapies Therapy[] // Reverse relation to Therapy
+}
+
+model Condition {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  name        String
+  description String?
+  severity    String?
+  status      CurrenStatus
+
+  therapies Therapy[] // Reverse relation to Therapy
+
+  // Many-to-many relationships
+  conditionSymptom ConditionSymptom[]
+  taskCondition    TaskCondition[]
+}
+
+model Symptom {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  name        String
+  description String?
+
+  conditionSymptom ConditionSymptom[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  name     String
+  email    String   @unique
+  password String
+  role     RoleType @default(USER)
+
+  patients     Patient[] // Reverse relation to Patient
+  doctors      Doctor[] // Reverse relation to Doctor
+  consumers    Consumer[] // Reverse relation to Consumer
+  userResource UserResource[] // Reverse relation to UserResource
+}
+
+model Patient {
+  id Int @id @default(autoincrement())
+
+  lastTherapy   Therapy? @relation(fields: [lastTherapyId], references: [id])
+  lastTherapyId Int?
+  user          User?    @relation(fields: [userId], references: [id])
+  userId        Int?
+
+  // Many-to-many relationships
+  patientTherapies PatientTherapies[]
+}
+
+model Doctor {
+  id Int @id @default(autoincrement())
+
+  specialty String?
+
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?
+
+  // Many-to-many relationships
+  doctorTherapies DoctorTherapies[]
+}
+
+model Consumer {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  preferences String?
+
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?
+}
+
+model Resource {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  name     String
+  metadata Json?
+  type     ResourceType
+
+  taskResource TaskResource[] // Reverse relation to TaskResource
+  userResource UserResource[] // Reverse relation to UserResource
+}
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  description String
+  output      String
+  status      CurrenStatus
+
+  taskResource  TaskResource[] // Reverse relation to TaskResource
+  taskTherapy   TaskTherapy[] // Reverse relation to TaskTherapy
+  taskCondition TaskCondition[] // Reverse relation to TaskCondition
+}
+
+// Define the PatientTherapies table for the many-to-many relationship between patient and therapy
+model PatientTherapies {
+  patient   Patient @relation(fields: [patientId], references: [id])
+  patientId Int
+  therapy   Therapy @relation(fields: [therapyId], references: [id])
+  therapyId Int
+
+  @@id([patientId, therapyId])
+}
+
+// Define the DoctorTherapies table for the many-to-many relationship between doctor and therapy
+model DoctorTherapies {
+  doctor    Doctor  @relation(fields: [doctorId], references: [id])
+  doctorId  Int
+  therapy   Therapy @relation(fields: [therapyId], references: [id])
+  therapyId Int
+
+  @@id([doctorId, therapyId])
+}
+
+// Define the TaskResource table for the many-to-many relationship between task and resource
+model TaskResource {
+  task       Task     @relation(fields: [taskId], references: [id])
+  taskId     Int
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  resourceId Int
+
+  @@id([taskId, resourceId])
+}
+
+// Define the UserResource table for the many-to-many relationship between user and resource
+model UserResource {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  resource   Resource @relation(fields: [resourceId], references: [id])
+  resourceId Int
+
+  @@id([userId, resourceId])
+}
+
+// Define the TaskTherapy table for the many-to-many relationship between task and therapy
+model TaskTherapy {
+  task      Task    @relation(fields: [taskId], references: [id])
+  taskId    Int
+  therapy   Therapy @relation(fields: [therapyId], references: [id])
+  therapyId Int
+
+  @@id([taskId, therapyId])
+}
+
+// Define the TaskCondition table for the many-to-many relationship between task and condition
+model TaskCondition {
+  task        Task      @relation(fields: [taskId], references: [id])
+  taskId      Int
+  condition   Condition @relation(fields: [conditionId], references: [id])
+  conditionId Int
+
+  @@id([taskId, conditionId])
+}
+
+// Define the ConditionSymptom table for the many-to-many relationship between condition and symptom
+model ConditionSymptom {
+  comdition   Condition @relation(fields: [conditionId], references: [id])
+  conditionId Int
+  symptom     Symptom   @relation(fields: [symptomId], references: [id])
+  symptomId   Int
+
+  @@id([conditionId, symptomId])
 }
 
 enum RoleType {
@@ -34,171 +257,24 @@ enum AuditLogRequestMethodEnum {
   delete
 }
 
-model AuditLog {
-  id Int @id @default(autoincrement())
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  userId  String
-  context AuditLogContextEnum
-  method  AuditLogRequestMethodEnum?
-  event   String
-  data    Json?
+enum CurrenStatus {
+  Requested
+  ToDo
+  InProgress
+  OnHold
+  Completed
+  Cancelled
+  Failed
 }
 
-// Define the therapy table
-model Therapy {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  name        String
-  description String?
-  duration    Int?
-
-  diagnosis   Diagnosis? @relation(fields: [diagnosisId], references: [id])
-  diagnosisId Int?
-  condition   Condition? @relation(fields: [conditionId], references: [id])
-  conditionId Int?
-
-  patient          Patient[]
-  doctor           Doctor?            @relation(fields: [doctorId], references: [id])
-  doctorId         Int?
-  task             Task[]
-  patientTherapies PatientTherapies[]
-  doctorTherapies  DoctorTherapies[]
-}
-
-// Define the diagnosis table
-model Diagnosis {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  name        String
-  description String?
-  therapies   Therapy[] // Reverse relation to Therapy
-}
-
-// Define the condition table
-model Condition {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  name        String
-  description String?
-  severity    String?
-
-  symptoms Symptom[] // Many-to-many relation to Symptom
-  therapy  Therapy[]
-}
-
-// Define the symptom table
-model Symptom {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  name        String
-  description String?
-
-  conditions Condition[] // Many-to-many relation to Condition
-}
-
-// Define the sys_user table
-model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  name     String
-  email    String   @unique
-  password String
-  role     RoleType @default(USER)
-
-  patients  Patient[]
-  doctors   Doctor[]
-  consumers Consumer[]
-}
-
-// Define the patient table
-model Patient {
-  id Int @id @default(autoincrement())
-
-  lastTherapy      Therapy?           @relation(fields: [lastTherapyId], references: [id])
-  lastTherapyId    Int?
-  user             User?              @relation(fields: [userId], references: [id])
-  userId           Int?
-  patientTherapies PatientTherapies[]
-}
-
-// Define the doctor table
-model Doctor {
-  id Int @id @default(autoincrement())
-
-  specialty       String?
-  therapies       Therapy[] // Many-to-many relation to Therapy
-  user            User?             @relation(fields: [userId], references: [id])
-  userId          Int?
-  doctorTherapies DoctorTherapies[]
-}
-
-model Consumer {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  preferences String?
-  user        User?   @relation(fields: [userId], references: [id])
-  userId      Int?
-}
-
-// Define the resource table
-model Resource {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  name String
-}
-
-// Define the task table
-model Task {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  therapy   Therapy? @relation(fields: [therapyId], references: [id])
-  therapyId Int?
-}
-
-// Define the integration table
-model Integration {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  apiDetails String?
-}
-
-// Define the patient_therapies table for the many-to-many relationship between patient and therapy
-model PatientTherapies {
-  patient   Patient @relation(fields: [patientId], references: [id])
-  patientId Int
-  therapy   Therapy @relation(fields: [therapyId], references: [id])
-  therapyId Int
-
-  @@id([patientId, therapyId])
-}
-
-// Define the doctor_therapies table for the many-to-many relationship between doctor and therapy
-model DoctorTherapies {
-  doctor    Doctor  @relation(fields: [doctorId], references: [id])
-  doctorId  Int
-  therapy   Therapy @relation(fields: [therapyId], references: [id])
-  therapyId Int
-
-  @@id([doctorId, therapyId])
+enum ResourceType {
+  TextType
+  UserMetricType
+  UserNoteType
+  UserTaskAnswerType
+  TaskOutputType
+  IntegrationType
+  VideoType
+  AudioType
+  ImageType
 }
