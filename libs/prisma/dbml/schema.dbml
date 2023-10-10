@@ -20,7 +20,7 @@ Table Therapy {
   name String [not null]
   description String
   duration Int
-  status CurrenStatus [not null]
+  status CurrentStatus [not null]
   diagnosis Diagnosis
   diagnosisId Int
   condition Condition
@@ -37,7 +37,7 @@ Table Diagnosis {
   updatedAt DateTime [default: `now()`, not null]
   name String [not null]
   description String
-  status CurrenStatus [not null]
+  status CurrentStatus [not null]
   therapies Therapy [not null]
 }
 
@@ -48,7 +48,7 @@ Table Condition {
   name String [not null]
   description String
   severity String
-  status CurrenStatus [not null]
+  status CurrentStatus [not null]
   therapies Therapy [not null]
   conditionSymptom ConditionSymptom [not null]
   taskCondition TaskCondition [not null]
@@ -120,7 +120,7 @@ Table Task {
   updatedAt DateTime [default: `now()`, not null]
   description String [not null]
   output String [not null]
-  status CurrenStatus [not null]
+  status CurrentStatus [not null]
   taskResource TaskResource [not null]
   taskTherapy TaskTherapy [not null]
   taskCondition TaskCondition [not null]
@@ -222,7 +222,7 @@ Enum AuditLogRequestMethodEnum {
   delete
 }
 
-Enum CurrenStatus {
+Enum CurrentStatus {
   Requested
   ToDo
   InProgress

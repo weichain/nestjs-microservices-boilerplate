@@ -37,11 +37,13 @@ export enum DefaultStatusMessage {
 }
 
 export enum Microservices {
-  USERS = 'USERS',
   AUTH = 'AUTH',
+  PATIENTS = 'PATIENTS',
 }
 
-export enum UsersMessagePatterns {}
+export enum PatientsMessagePatterns {
+  get = 'get',
+}
 
 export enum AuthMessagePatterns {
   register = 'register',

@@ -5,6 +5,7 @@ import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 
 export function setupSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle(SwaggerConstants.TITLE)
     .setDescription(SwaggerConstants.DESCRIPTION)
     .setVersion(SwaggerConstants.VERSION)

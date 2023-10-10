@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { PrismaClient } from '../clients/main';
+import { CurrentStatus, PrismaClient, ResourceType } from '../clients/main';
 
 const prisma = new PrismaClient();
+const currentStatusArray = Object.values(CurrentStatus);
+const resourceTypeArray = Object.values(ResourceType);
 
 async function seed() {
   const users = await createUsers(10);
@@ -10,6 +12,7 @@ async function seed() {
   const symptoms = await createSymptoms(10);
   const conditions = await createConditions(symptoms, 10);
   const therapies = await createTherapies(diagnoses, conditions, 10);
+  await createTasks(therapies, conditions, 10);
 
   await createDoctors(users.slice(0, 2), therapies);
   await createPatients(users.slice(2, 10), therapies);
@@ -29,6 +32,8 @@ async function createTherapies(diagnoses: any[], conditions: any[], count = 10) 
         name: faker.lorem.sentence(),
         description: faker.lorem.sentence(),
         duration: faker.helpers.rangeToNumber({ min: 1, max: 30 }),
+        status: faker.helpers.arrayElement(currentStatusArray),
+
         diagnosis: {
           connect: {
             id: diagnoses[faker.helpers.rangeToNumber({ min: 0, max: diagnoses.length - 1 })].id,
@@ -46,7 +51,7 @@ async function createTherapies(diagnoses: any[], conditions: any[], count = 10) 
 
   const createdTherapies = [];
   for (const therapy of therapies) {
-    const createdUser = await prisma.therapy.create({ data: therapy });
+    const createdUser = await prisma.therapy.create({ data: { ...therapy } });
     console.log(`Created therapy with id ${createdUser.id}`);
     createdTherapies.push(createdUser);
   }
@@ -90,7 +95,7 @@ async function createUsers(count = 10) {
 
   const createdUsers = [];
   for (const user of users) {
-    const createdUser = await prisma.user.create({ data: user });
+    const createdUser = await prisma.user.create({ data: { ...user } });
     console.log(`Created user with id ${createdUser.id}`);
     createdUsers.push(createdUser);
   }
@@ -104,6 +109,7 @@ async function createDiagnoses(count = 10) {
       return {
         name: faker.word.words(2),
         description: faker.lorem.sentence(),
+        status: faker.helpers.arrayElement(currentStatusArray),
       };
     },
     { count },
@@ -111,7 +117,7 @@ async function createDiagnoses(count = 10) {
 
   const createdDiagnoses = [];
   for (const diagnosis of diagnoses) {
-    const createdUser = await prisma.diagnosis.create({ data: diagnosis });
+    const createdUser = await prisma.diagnosis.create({ data: { ...diagnosis } });
     console.log(`Created diagnosis with id ${createdUser.id}`);
     createdDiagnoses.push(createdUser);
   }
@@ -121,12 +127,7 @@ async function createDiagnoses(count = 10) {
 
 async function createConditions(symptoms: any[], count = 10) {
   function getRandomSymptoms() {
-    return faker.helpers.multiple(
-      () => {
-        return symptoms[faker.helpers.rangeToNumber({ min: 0, max: symptoms.length - 1 })];
-      },
-      { count: faker.helpers.rangeToNumber({ min: 1, max: symptoms.length - 1 }) },
-    );
+    return symptoms[faker.helpers.rangeToNumber({ min: 0, max: symptoms.length - 1 })];
   }
 
   const conditions = faker.helpers.multiple(
@@ -135,9 +136,7 @@ async function createConditions(symptoms: any[], count = 10) {
         name: faker.word.words(2),
         description: faker.lorem.sentence(),
         severity: faker.word.adverb(),
-        symptoms: {
-          connect: getRandomSymptoms().map((symptom) => ({ id: symptom.id })),
-        },
+        status: faker.helpers.arrayElement(currentStatusArray),
       };
     },
     { count },
@@ -145,7 +144,20 @@ async function createConditions(symptoms: any[], count = 10) {
 
   const createdConditions = [];
   for (const condition of conditions) {
-    const createdUser = await prisma.condition.create({ data: condition });
+    const createdUser = await prisma.condition.create({
+      data: {
+        ...condition,
+        conditionSymptom: {
+          create: {
+            symptom: {
+              connect: {
+                id: getRandomSymptoms().id,
+              },
+            },
+          },
+        },
+      },
+    });
     console.log(`Created condition with id ${createdUser.id}`);
     createdConditions.push(createdUser);
   }
@@ -155,7 +167,9 @@ async function createConditions(symptoms: any[], count = 10) {
 
 async function createDoctors(users: any[], therapies: any[]) {
   const doctors = [];
+  let therapyId = null;
   for (let i = 0; i < users.length; i++) {
+    therapyId = therapies[faker.helpers.rangeToNumber({ min: 0, max: therapies.length - 1 })].id;
     doctors.push({
       specialty: faker.helpers.arrayElement(['Cardiology', 'Orthopedics', 'Neurology']),
       user: {
@@ -163,17 +177,25 @@ async function createDoctors(users: any[], therapies: any[]) {
           id: users[i].id,
         },
       },
-      therapies: {
-        connect: {
-          id: therapies[faker.helpers.rangeToNumber({ min: 0, max: therapies.length - 1 })].id,
-        },
-      },
     });
   }
 
   const createdDoctors = [];
   for (const doctor of doctors) {
-    const createdUser = await prisma.doctor.create({ data: doctor });
+    const createdUser = await prisma.doctor.create({
+      data: {
+        ...doctor,
+        doctorTherapies: {
+          create: {
+            therapy: {
+              connect: {
+                id: therapyId,
+              },
+            },
+          },
+        },
+      },
+    });
     console.log(`Created doctor with id ${createdUser.id}`);
     createdDoctors.push(createdUser);
   }
@@ -183,7 +205,9 @@ async function createDoctors(users: any[], therapies: any[]) {
 
 async function createPatients(users: any[], therapies: any[]) {
   const patients = [];
+  let therapyId = null;
   for (let i = 0; i < users.length; i++) {
+    therapyId = therapies[faker.helpers.rangeToNumber({ min: 0, max: therapies.length - 1 })].id;
     patients.push({
       user: {
         connect: {
@@ -192,7 +216,7 @@ async function createPatients(users: any[], therapies: any[]) {
       },
       lastTherapy: {
         connect: {
-          id: therapies[faker.helpers.rangeToNumber({ min: 0, max: therapies.length - 1 })].id,
+          id: therapyId,
         },
       },
     });
@@ -200,10 +224,64 @@ async function createPatients(users: any[], therapies: any[]) {
 
   const createdPatients = [];
   for (const patient of patients) {
-    const createdUser = await prisma.patient.create({ data: patient });
+    const createdUser = await prisma.patient.create({
+      data: {
+        ...patient,
+        patientTherapies: {
+          create: {
+            therapy: {
+              connect: {
+                id: therapyId,
+              },
+            },
+          },
+        },
+      },
+    });
     console.log(`Created patient with id ${createdUser.id}`);
     createdPatients.push(createdUser);
   }
 
   return createdPatients;
+}
+
+async function createTasks(therapies: any[], conditions: any[], count = 10) {
+  for (let i = 0; i < count; i++) {
+    const createdTask = await prisma.task.create({
+      data: {
+        description: faker.lorem.sentence(),
+        output: faker.lorem.sentence(),
+        status: faker.helpers.arrayElement(currentStatusArray),
+        taskTherapy: {
+          create: {
+            therapy: {
+              connect: {
+                id: therapies[faker.helpers.rangeToNumber({ min: 0, max: therapies.length - 1 })].id,
+              },
+            },
+          },
+        },
+        taskCondition: {
+          create: {
+            condition: {
+              connect: {
+                id: conditions[faker.helpers.rangeToNumber({ min: 0, max: conditions.length - 1 })].id,
+              },
+            },
+          },
+        },
+        taskResource: {
+          create: {
+            resource: {
+              create: {
+                name: faker.lorem.sentence(),
+                type: faker.helpers.arrayElement(resourceTypeArray),
+              },
+            },
+          },
+        },
+      },
+    });
+    console.log(`Created task with id ${createdTask.id}`);
+  }
 }

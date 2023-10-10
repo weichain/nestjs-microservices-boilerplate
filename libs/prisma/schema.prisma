@@ -35,7 +35,7 @@ model Therapy {
   name        String
   description String?
   duration    Int?
-  status      CurrenStatus
+  status      CurrentStatus
 
   diagnosis   Diagnosis? @relation(fields: [diagnosisId], references: [id])
   diagnosisId Int?
@@ -57,7 +57,7 @@ model Diagnosis {
 
   name        String
   description String?
-  status      CurrenStatus
+  status      CurrentStatus
 
   therapies Therapy[] // Reverse relation to Therapy
 }
@@ -70,7 +70,7 @@ model Condition {
   name        String
   description String?
   severity    String?
-  status      CurrenStatus
+  status      CurrentStatus
 
   therapies Therapy[] // Reverse relation to Therapy
 
@@ -161,7 +161,7 @@ model Task {
 
   description String
   output      String
-  status      CurrenStatus
+  status      CurrentStatus
 
   taskResource  TaskResource[] // Reverse relation to TaskResource
   taskTherapy   TaskTherapy[] // Reverse relation to TaskTherapy
@@ -257,7 +257,7 @@ enum AuditLogRequestMethodEnum {
   delete
 }
 
-enum CurrenStatus {
+enum CurrentStatus {
   Requested
   ToDo
   InProgress

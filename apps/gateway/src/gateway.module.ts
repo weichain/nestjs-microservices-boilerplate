@@ -9,10 +9,11 @@ import { ServiceRegistryModule } from '@lib/service.registry';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { Clients } from './gateway.providers';
 import { AuthController } from './services/auth/auth.controller';
+import { PatientsController } from './services/patients/patients.controller';
 
 @Module({
   imports: [LoggerModule, AuditLoggerModule, ServiceRegistryModule, HealthModule, MetricsModule, PrismaModule],
-  controllers: [AuthController],
+  controllers: [AuthController, PatientsController],
   providers: [...Clients, UserJwtStrategy],
 })
 export class GatewayModule implements NestModule {

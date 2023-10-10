@@ -55,6 +55,17 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserUpdatePasswordResponseDto"
       tags: *a1
+  /api/patients:
+    get:
+      operationId: PatientsController_fetchPatient
+      parameters: []
+      responses:
+        "200":
+          description: ""
+      tags:
+        - api/patients
+      security:
+        - bearer: []
   /metrics:
     get:
       operationId: PrometheusController_index
@@ -70,6 +81,11 @@ info:
 tags: []
 servers: []
 components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
   schemas:
     UserRegisterRequestDto:
       type: object

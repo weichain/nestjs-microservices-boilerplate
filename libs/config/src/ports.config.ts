@@ -6,4 +6,5 @@ export default cleanEnv(process.env, {
 
   USERS_SERVICE_PORT: port({ default: 49152 }),
   AUTH_SERVICE_PORT: port({ default: 49153 }),
+  PATIENTS_SERVICE_PORT: port({ default: 49154 }),
 });
