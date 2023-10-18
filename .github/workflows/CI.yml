@@ -8,7 +8,8 @@ on:
 jobs:
   lint-format-tests:
     runs-on: ubuntu-latest
-
+    env:
+      MAIN_DATABASE_URI: ${{ secrets.MAIN_DATABASE_URI }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,8 +42,6 @@ jobs:
           mongodb-port: 27018
 
       - name: Run Prisma migrations
-        env:
-          MAIN_DATABASE_URI: ${{ secrets.MAIN_DATABASE_URI }}
         run: |
           pnpm prisma:generate:test
           pnpm prisma:push:test
