@@ -30,12 +30,20 @@ jobs:
       - name: Check code formatting
         run: pnpm format --check
 
-      - name: Start Redis and MongoDB Docker containers
+      - name: Start Redis
+        run: docker-compose --file docker/redis/docker-compose.yaml up -d
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.10.0
+        with:
+          mongodb-version: '6.0'
+          mongodb-replica-set: test-rs
+          mongodb-port: 27018
+
+      - name: Run Prisma migrations
         env:
           MAIN_DATABASE_URI: ${{ secrets.MAIN_DATABASE_URI }}
         run: |
-          docker-compose --file docker/redis/docker-compose.yaml up -d
-          docker-compose --file docker/mongodb/docker-compose.yaml up -d
           pnpm prisma:generate:test
           pnpm prisma:push:test
 
