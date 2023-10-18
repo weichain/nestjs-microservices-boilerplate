@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  lint-and-format:
+  lint-format-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,6 +31,8 @@ jobs:
         run: pnpm format --check
 
       - name: Start Redis and MongoDB Docker containers
+        env:
+          DATABASE_URL: ${{ secrets.MAIN_DATABASE_URI }}
         run: |
           docker-compose --file docker/redis/docker-compose.yaml up -d
           docker-compose --file docker/mongodb/docker-compose.yaml up -d
