@@ -1,12 +1,13 @@
-name: CI
+name: Tests
 
 on:
-  push:
-    branches:
-      - '*'
+  workflow_run:
+    workflows: ['Lint']
+    types:
+      - completed
 
 jobs:
-  lint-format-tests:
+  tests:
     runs-on: ubuntu-latest
     env:
       MAIN_DATABASE_URI: ${{ secrets.MAIN_DATABASE_URI }}
@@ -24,12 +25,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Check code formatting
-        run: pnpm format --check
 
       - name: Start Redis
         run: docker-compose --file docker/redis/docker-compose.yaml up -d
