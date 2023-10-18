@@ -63,8 +63,8 @@ paths:
         "200":
           description: ""
 info:
-  title: Alter API
-  description: API Documentation for Alter
+  title: API
+  description: API Documentation
   version: "1.0"
   contact: {}
 tags: []

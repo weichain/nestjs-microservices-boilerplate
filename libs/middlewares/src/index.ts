@@ -1,4 +1,4 @@
-export { CustomFaviconMiddleware } from './favico.middleware';
 export * from './middleware.module';
+
+export { CustomFaviconMiddleware } from './favico.middleware';
 export { NodeRateLimiterMiddleware } from './rate.limiter.middleware';
-export { secureApplication } from './security.middleware';

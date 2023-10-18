@@ -3,14 +3,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { MetricsService } from './metrics.service';
 
 @Module({
-  imports: [
-    PrometheusModule.register({
-      global: true,
-      defaultLabels: {
-        app: 'Alter',
-      },
-    }),
-  ],
+  imports: [PrometheusModule.register({ global: true })],
   providers: [MetricsService],
   exports: [MetricsService],
 })

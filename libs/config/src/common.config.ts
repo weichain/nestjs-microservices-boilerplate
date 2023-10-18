@@ -1,4 +1,4 @@
-import { cleanEnv, str } from 'envalid';
+import { bool, cleanEnv, str } from 'envalid';
 import { v4 as uuidv4 } from 'uuid';
 
 export default cleanEnv(process.env, {
@@ -9,5 +9,5 @@ export default cleanEnv(process.env, {
 
   INSTANCE_ID: str({ default: uuidv4() }),
 
-  API_CACHE_ENABLED: str({ default: '' }),
+  API_CACHE_ENABLED: bool({ default: false }),
 });

@@ -34,7 +34,7 @@ export class ServiceRegistry {
 
   public async getAllServices() {
     const services = await this.redisClient.hgetall('services');
-    const parsedServices: Record<string, ServiceInfo> = {};
+    const parsedServices: Record<string, IServiceInfo> = {};
 
     for (const key of Object.keys(services)) {
       parsedServices[key.split(':')[1]] = JSON.parse(services[key]);
@@ -44,7 +44,7 @@ export class ServiceRegistry {
   }
 }
 
-interface ServiceInfo {
+interface IServiceInfo {
   host: string;
   port: number;
 }

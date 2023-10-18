@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Check code formatting
+        run: pnpm format --check
+
+      - name: Start Redis and MongoDB Docker containers
+        run: |
+          docker-compose --file docker/redis/docker-compose.yaml up -d
+          docker-compose --file docker/mongodb/docker-compose.yaml up -d
+          pnpm prisma:generate:test
+          pnpm prisma:push:test
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Stop Docker containers
+        run: |
+          docker-compose --file docker/redis/docker-compose.yaml down
+          docker-compose --file docker/mongodb/docker-compose.yaml down

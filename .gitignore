@@ -37,5 +37,6 @@ lerna-debug.log*
 # Prisma generated clients
 /libs/prisma/clients
 
+# Env
 env/*
 !/env/example.env

@@ -1,5 +1,5 @@
 export * from './constants';
-export * from './http.request';
+export * from './interfaces';
 export * from './parse-boolean';
 export * from './setup';
 export * from './time';

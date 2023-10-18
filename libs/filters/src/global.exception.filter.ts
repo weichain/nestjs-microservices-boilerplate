@@ -1,3 +1,4 @@
+import { ICustomException } from '@lib/common';
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, InternalServerErrorException, Logger } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -19,14 +20,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
 
   constructor() {}
 
-  async catch(exception: any, host: ArgumentsHost) {
+  catch(exception: ICustomException, host: ArgumentsHost) {
     this.logger.log(exception);
 
     if (exception instanceof HttpException) {
       this.handleHttpException(exception, host);
-    } else if (exception.type === 'RPC') {
+    } else if (typeof exception.error === 'object') {
       this.handleHttpException(
-        new InternalServerErrorException({ error: 'RpcError', message: exception.error.message, code: exception.error.code }),
+        new InternalServerErrorException({ message: exception.error.message, error: 'RpcError', statusCode: exception.error.code }),
         host,
       );
     } else {

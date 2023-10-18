@@ -1,7 +1,7 @@
 import { sleep } from '@lib/common';
 import { Logger } from '@nestjs/common';
 
-interface PropertyMethodDecorator {
+interface IPropertyMethodDecorator {
   (_target: Record<string, any>, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor;
 }
 
@@ -13,7 +13,7 @@ interface PropertyMethodDecorator {
     callback: () => ({ code: ServerErrorCode.NetworkError, success: false, message: 'Network Error' }),
   })
  */
-export function Retryable(options: RetryOptions): PropertyMethodDecorator {
+export function Retryable(options: IRetryOptions): IPropertyMethodDecorator {
   const logger = new Logger('RetryableDecorator');
 
   function canRetry(e: Error): boolean {
@@ -72,7 +72,7 @@ export function Retryable(options: RetryOptions): PropertyMethodDecorator {
   };
 }
 
-export interface RetryOptions {
+export interface IRetryOptions {
   /**
    * Maximum number of attempts
    */
