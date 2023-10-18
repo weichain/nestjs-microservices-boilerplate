@@ -16,7 +16,7 @@ export class AuditLoggerInterceptor implements NestInterceptor {
     private readonly service: AuditLoggerService,
   ) {}
 
-  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<CallHandler> {
     const level = this.reflector.get<AuditLogLevelOption>(AUDIT_LOGGER_LEVEL, context.getHandler());
 
     if (!level || level === 'disabled') {
@@ -24,13 +24,13 @@ export class AuditLoggerInterceptor implements NestInterceptor {
     }
 
     if (context.getType() === 'http') {
-      return await this.logHttp(context, next, level);
+      return this.logHttp(context, next, level);
     }
 
     return next.handle();
   }
 
-  private async logHttp(context: ExecutionContext, next: CallHandler, level: AuditLogLevelOption | null): Promise<Observable<any>> {
+  private logHttp(context: ExecutionContext, next: CallHandler, level: AuditLogLevelOption | null): Observable<CallHandler> {
     const user = context.switchToHttp().getRequest<IRequest>().user?.id;
 
     if (!user) {
@@ -41,7 +41,10 @@ export class AuditLoggerInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(() => {
-        this.service.createHttpAudit(level, req, user);
+        this.service
+          .createHttpAudit(level, req, user)
+          .then(() => {})
+          .catch(() => {});
       }),
     );
   }

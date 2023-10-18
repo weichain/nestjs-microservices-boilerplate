@@ -3,9 +3,9 @@ export enum CacheKeys {}
 
 // Swagger constants
 export class SwaggerConstants {
-  public static readonly DESCRIPTION = 'API Documentation for Alter';
-  public static readonly TITLE = 'Alter API';
-  public static readonly TAG = 'Alter API';
+  public static readonly DESCRIPTION = 'API Documentation';
+  public static readonly TITLE = 'API';
+  public static readonly TAG = 'API';
   public static readonly VERSION = '1.0';
   public static readonly PATH = 'api/docs';
 }
@@ -44,9 +44,9 @@ export enum Microservices {
 export enum UsersMessagePatterns {}
 
 export enum AuthMessagePatterns {
-  register = 'register',
-  login = 'login',
-  updatePassword = 'updatePassword',
+  REGISTER = 'register',
+  LOGIN = 'login',
+  UPDATE_PASSWORD = 'updatePassword',
 }
 
 export enum TokenType {

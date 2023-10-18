@@ -18,10 +18,20 @@ export function setupSwagger(app: INestApplication) {
 
 function updateYamlApi(document: OpenAPIObject) {
   if (Config.NODE_ENV === 'development') {
-    import('fs').then((fs) => {
-      import('yaml').then((yaml) => {
-        fs.writeFile('./docs/alter_api.yaml', yaml.stringify(document, {}), () => {});
+    import('fs')
+      .then((fs) => {
+        import('yaml')
+          .then((yaml) => {
+            fs.writeFile('./docs/api.yaml', yaml.stringify(document, {}), () => {});
+          })
+          .catch((err) => {
+            // eslint-disable-next-line no-console
+            console.error(err);
+          });
+      })
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error(err);
       });
-    });
   }
 }

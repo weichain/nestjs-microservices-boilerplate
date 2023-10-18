@@ -6,11 +6,11 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 export const USER_JWT_STRATEGY = 'user-jwt-strategy';
 
-interface AuthPayload {
+interface IAuthPayload {
   email: string;
 }
 
-interface AuthResponse {
+interface IAuthResponse {
   id: string;
 }
 
@@ -24,7 +24,7 @@ export class UserJwtStrategy extends PassportStrategy(Strategy, USER_JWT_STRATEG
     });
   }
 
-  async validate(payload: AuthPayload): Promise<AuthResponse> {
+  async validate(payload: IAuthPayload): Promise<IAuthResponse> {
     const user = await this.prisma.user.findFirst({
       select: {
         id: true,

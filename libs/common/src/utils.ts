@@ -26,7 +26,7 @@ export function difference(array: string[], values: string | string[]): string[]
  * @param predicate The predicate to filter the array with.
  * @returns The filtered array.
  */
-export async function asyncFilter<T>(arr: ReadonlyArray<T>, predicate: any): Promise<T[]> {
+export async function asyncFilter<T>(arr: ReadonlyArray<T>, predicate: () => unknown): Promise<T[]> {
   const results = await Promise.all(arr.map(predicate));
   return arr.filter((_v: any, index: string | number) => results[index]);
 }

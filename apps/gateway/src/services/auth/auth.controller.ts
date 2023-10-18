@@ -22,16 +22,16 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: UserRegisterRequestDto })
   @ApiOkResponse({ type: UserRegisterResponseDto })
-  public async createUser(@Body() data: UserRegisterRequestDto): Promise<UserRegisterResponseDto> {
-    return firstValueFrom<UserRegisterResponseDto>(this.authServiceProxy.send({ cmd: AuthMessagePatterns.register }, { data }));
+  public createUser(@Body() data: UserRegisterRequestDto): Promise<UserRegisterResponseDto> {
+    return firstValueFrom<UserRegisterResponseDto>(this.authServiceProxy.send({ cmd: AuthMessagePatterns.REGISTER }, { data }));
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: UserLoginRequestDto })
   @ApiOkResponse({ type: UserLoginResponseDto })
-  public async login(@Body() data: UserLoginRequestDto): Promise<UserLoginResponseDto> {
-    return firstValueFrom<UserLoginResponseDto>(this.authServiceProxy.send({ cmd: AuthMessagePatterns.login }, { data }));
+  public login(@Body() data: UserLoginRequestDto): Promise<UserLoginResponseDto> {
+    return firstValueFrom<UserLoginResponseDto>(this.authServiceProxy.send({ cmd: AuthMessagePatterns.LOGIN }, { data }));
   }
 
   @Post('password')
@@ -39,12 +39,9 @@ export class AuthController {
   @ApiBody({ type: UserUpdatePasswordRequestDto })
   @ApiOkResponse({ type: UserUpdatePasswordResponseDto })
   @UseGuards(JwtAuthGuard)
-  public async updatePassword(
-    @Body() data: UserUpdatePasswordRequestDto,
-    @Request() req: IRequest,
-  ): Promise<UserUpdatePasswordResponseDto> {
+  public updatePassword(@Body() data: UserUpdatePasswordRequestDto, @Request() req: IRequest): Promise<UserUpdatePasswordResponseDto> {
     return firstValueFrom<UserUpdatePasswordResponseDto>(
-      this.authServiceProxy.send({ cmd: AuthMessagePatterns.updatePassword }, { id: req.user.id, data }),
+      this.authServiceProxy.send({ cmd: AuthMessagePatterns.UPDATE_PASSWORD }, { id: req.user.id, data }),
     );
   }
 }

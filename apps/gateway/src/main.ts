@@ -2,7 +2,6 @@ import { Config } from '@lib/config';
 import { GlobalExceptionFilter } from '@lib/filters';
 import { AuditLoggerInterceptor, HttpResponseInterceptor, TimeoutInterceptor } from '@lib/interceptors';
 import { useLogger } from '@lib/logger';
-import { secureApplication } from '@lib/middlewares';
 import { Logger, VERSION_NEUTRAL, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
@@ -20,11 +19,6 @@ async function bootstrap() {
   });
 
   useLogger(app);
-
-  /**
-   * Apply security middlewares
-   */
-  secureApplication(app);
 
   /**
    * Setup Swagger

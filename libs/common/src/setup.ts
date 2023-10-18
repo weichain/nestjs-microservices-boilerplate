@@ -6,18 +6,18 @@ import { NestFactory } from '@nestjs/core';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { Microservices } from './constants';
 
-interface MicroserviceSetupOptions {
+interface IMicroserviceSetupOptions {
   port: number;
   host?: string;
   retryAttempts?: number;
   retryDelay?: number; // ms
 }
 
-interface NestJsModule {
+interface INestJsModule {
   name: string;
 }
 
-export async function microserviceSetup<M extends NestJsModule>(module: M, options?: MicroserviceSetupOptions) {
+export async function microserviceSetup<M extends INestJsModule>(module: M, options?: IMicroserviceSetupOptions) {
   // sets the default options
   const { host = 'localhost', port, retryAttempts = 5, retryDelay = 250 } = options;
 

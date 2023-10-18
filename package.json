@@ -1,5 +1,5 @@
 {
-  "name": "alter",
+  "name": "nestjs-microservice-boilerplate",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -10,7 +10,7 @@
     "build": "node ./scripts/build.mjs",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
+    "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/apps/gateway/main",
     "start:all": "node ./scripts/start.mjs",
@@ -18,15 +18,22 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "dotenv:prod": "dotenv -e ./env/production.env --",
     "dotenv:dev": "dotenv -e ./env/development.env --",
+    "dotenv:test": "dotenv -e ./env/test.env --",
+    "redis": "docker-compose --file docker/redis/docker-compose.yaml up -d",
+    "mongodb": "docker-compose --file docker/mongodb/docker-compose.yaml up -d && pnpm prisma:generate:test && pnpm prisma:push:test",
+    "test:init": "pnpm redis && pnpm mongodb",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/gateway/test/jest-e2e.json",
+    "test:e2e": "cross-env NODE_ENV=test jest --logHeapUsage --verbose --ci --detectOpenHandles --runInBand --forceExit",
     "prisma:generate": "pnpm prisma generate --schema=./libs/prisma/schema.prisma",
-    "prisma:push": "cross-env NODE_ENV=development pnpm dotenv:dev prisma db push --schema=./libs/prisma/schema.prisma"
+    "prisma:push": "cross-env NODE_ENV=development pnpm dotenv:dev prisma db push --schema=./libs/prisma/schema.prisma",
+    "prisma:push:test": "pnpm dotenv:test pnpm prisma:push",
+    "prisma:generate:test": "pnpm dotenv:test pnpm prisma:generate"
   },
   "dependencies": {
+    "@faker-js/faker": "8.2.0",
     "@liaoliaots/nestjs-redis": "9.0.5",
     "@liaoliaots/nestjs-redis-health": "9.0.4",
     "@nestjs/common": "10.2.6",
@@ -79,6 +86,7 @@
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-prettier": "5.0.0",
     "jest": "29.7.0",
+    "jest-extended": "4.0.2",
     "prettier": "3.0.0",
     "prettier-plugin-organize-imports": "3.2.3",
     "prisma": "5.4.1",
@@ -97,7 +105,7 @@
       "ts"
     ],
     "rootDir": ".",
-    "testRegex": ".*\\.spec\\.ts$",
+    "testRegex": ".e2e-spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
