@@ -50,7 +50,9 @@
       "@lib/dtos": ["libs/dtos/src"],
       "@lib/dtos/*": ["libs/dtos/src/*"],
       "@lib/guards": ["libs/guards/src"],
-      "@lib/guards/*": ["libs/guards/src/*"]
+      "@lib/guards/*": ["libs/guards/src/*"],
+      "@lib/rate.limiter": ["libs/rate.limiter/src"],
+      "@lib/rate.limiter/*": ["libs/rate.limiter/src/*"]
     }
   }
 }

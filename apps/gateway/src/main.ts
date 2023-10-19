@@ -5,6 +5,7 @@ import { useLogger } from '@lib/logger';
 import { Logger, VERSION_NEUTRAL, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as compression from 'compression';
+import helmet from 'helmet';
 import { GatewayModule } from './gateway.module';
 import { getServerLoadEvent } from './logServerLoadEvent';
 import { setupSwagger } from './swagger';
@@ -40,6 +41,11 @@ async function bootstrap() {
    * Use performance middlewares
    */
   app.use(compression());
+
+  /**
+   * Use security middlewares
+   */
+  app.use(helmet());
 
   /**
    * Enable CORS
