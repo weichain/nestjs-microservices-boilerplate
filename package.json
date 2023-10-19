@@ -45,6 +45,7 @@
     "@nestjs/schedule": "3.0.4",
     "@nestjs/swagger": "7.1.13",
     "@nestjs/terminus": "10.1.1",
+    "@nestjs/throttler": "5.0.0",
     "@prisma/client": "5.4.1",
     "@willsoto/nestjs-prometheus": "5.5.1",
     "argon2": "0.31.1",
@@ -58,6 +59,7 @@
     "lodash": "4.17.21",
     "luxon": "3.4.3",
     "nestjs-pino": "3.5.0",
+    "nestjs-throttler-storage-redis": "0.4.1",
     "passport-jwt": "4.0.1",
     "pino-pretty": "10.2.3",
     "prisma-field-encryption": "1.5.0",
@@ -134,7 +136,8 @@
       "^@lib/service.registry(|/.*)$": "<rootDir>/libs/service.registry/src/$1",
       "^@lib/metrics(|/.*)$": "<rootDir>/libs/metrics/src/$1",
       "^@lib/dtos(|/.*)$": "<rootDir>/libs/dtos/src/$1",
-      "^@lib/guards(|/.*)$": "<rootDir>/libs/guards/src/$1"
+      "^@lib/guards(|/.*)$": "<rootDir>/libs/guards/src/$1",
+      "^@lib/rate.limiter(|/.*)$": "<rootDir>/libs/rate.limiter/src/$1"
     }
   }
 }
