@@ -34,5 +34,26 @@ export class PrismaService extends MainPrisma.PrismaClient implements OnModuleIn
     }
   }
 
-  private async createIndexes() {}
+  private async createIndexes() {
+    /**
+     * Mongodb should ignore the trial of recreation of index with same name
+     * @description create index for `DistributedLocks` collection
+     * @see https://docs.mongodb.com/manual/core/index-ttl/
+     * @see https://docs.mongodb.com/manual/tutorial/expire-data/
+     * @see https://docs.mongodb.com/manual/core/index-unique/
+     * @see https://docs.mongodb.com/manual/core/index-partial/
+     */
+    await this.$runCommandRaw({
+      createIndexes: 'DistributedLocks',
+      indexes: [
+        {
+          key: {
+            createdAt: 1,
+          },
+          name: 'DistributedLocks_createdAt_ttl_index',
+          expireAfterSeconds: 300,
+        },
+      ],
+    });
+  }
 }
