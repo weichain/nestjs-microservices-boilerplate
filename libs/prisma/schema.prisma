@@ -8,11 +8,6 @@ datasource db {
   url      = env("MAIN_DATABASE_URI")
 }
 
-enum RoleType {
-  USER
-  ADMIN
-}
-
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
@@ -22,6 +17,25 @@ model User {
   password String
   role     RoleType @default(USER)
   name     String?
+}
+
+model AuditLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId  String
+  context AuditLogContextEnum
+  method  AuditLogRequestMethodEnum?
+  event   String
+  data    Json?
+}
+
+model DistributedLocks {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  key       String   @unique
+  value     String
 }
 
 enum AuditLogContextEnum {
@@ -38,14 +52,7 @@ enum AuditLogRequestMethodEnum {
   delete
 }
 
-model AuditLog {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  userId  String
-  context AuditLogContextEnum
-  method  AuditLogRequestMethodEnum?
-  event   String
-  data    Json?
+enum RoleType {
+  USER
+  ADMIN
 }

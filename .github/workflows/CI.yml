@@ -28,6 +28,9 @@ jobs:
 
       - name: Check code formatting
         run: pnpm format --check
+
+      - name: Build
+        run: pnpm build
   tests:
     needs: [lint]
     runs-on: ubuntu-latest
