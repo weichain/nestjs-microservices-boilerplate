@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  redis:
+    extends:
+      file: ./docker/redis/docker-compose.yaml
+      service: redis
+  mongodb:
+    extends:
+      file: ./docker/mongodb/docker-compose.yaml
+      service: mongodb
+    container_name: mongodb
+    environment:
+      MONGO_REPLICA_HOST: mongodb # use the service name as the host because it's in the same Docker network
+  backend:
+    container_name: microservices
+    environment:
+      NODE_ENV: development
+      MAIN_DATABASE_URI: mongodb://root:root@mongodb:27018/localdb?authSource=admin
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: root
+      PRISMA_PUSH: ${PRISMA_PUSH:-true}
+    depends_on:
+      - redis
+      - mongodb
+    develop:
+      watch:
+        - action: sync
+          path: ./apps ./libs
+          target: /app/apps ./apps/libs
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'

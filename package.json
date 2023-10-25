@@ -9,6 +9,7 @@
     "postinstall": "pnpm prisma:generate",
     "build": "node ./scripts/build.mjs",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "start:local": "docker compose up -d && docker compose watch",
     "start": "nest start",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -28,7 +29,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "cross-env NODE_ENV=test jest --logHeapUsage --verbose --ci --detectOpenHandles --runInBand --forceExit",
     "prisma:generate": "pnpm prisma generate --schema=./libs/prisma/schema.prisma",
-    "prisma:push": "cross-env NODE_ENV=development pnpm dotenv:dev prisma db push --schema=./libs/prisma/schema.prisma",
+    "prisma:push": "prisma db push --schema=./libs/prisma/schema.prisma",
+    "prisma:push:dev": "cross-env NODE_ENV=development pnpm dotenv:dev prisma db push --schema=./libs/prisma/schema.prisma",
     "prisma:push:test": "pnpm dotenv:test pnpm prisma:push",
     "prisma:generate:test": "pnpm dotenv:test pnpm prisma:generate"
   },

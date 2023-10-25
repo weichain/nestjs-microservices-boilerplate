@@ -1,0 +1,6 @@
+node_modules
+env
+
+# allow development.env to be copied
+
+!env/development.env

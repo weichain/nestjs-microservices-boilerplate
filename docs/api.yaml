@@ -55,13 +55,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserUpdatePasswordResponseDto"
       tags: *a1
-  /metrics:
-    get:
-      operationId: PrometheusController_index
-      parameters: []
-      responses:
-        "200":
-          description: ""
 info:
   title: API
   description: API Documentation

@@ -54,5 +54,8 @@
       "@lib/rate.limiter": ["libs/rate.limiter/src"],
       "@lib/rate.limiter/*": ["libs/rate.limiter/src/*"]
     }
+  },
+  "watchOptions": {
+    "watchFile": "fixedPollingInterval"
   }
 }
