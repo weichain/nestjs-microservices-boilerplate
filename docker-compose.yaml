@@ -27,8 +27,13 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./apps ./libs
-          target: /app/apps ./apps/libs
+          path: ./apps
+          target: /app/apps
+          ignore:
+            - node_modules/
+        - action: sync
+          path: ./libs
+          target: /app/libs
           ignore:
             - node_modules/
         - action: rebuild
