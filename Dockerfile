@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Required when running the container
-ENV NODE_ENV=development
+ENV NODE_ENV=${NODE_ENV:-development}
 
 # Install build dependencies and build
 RUN npm install -g pnpm && \
