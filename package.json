@@ -9,7 +9,7 @@
     "postinstall": "pnpm prisma:generate",
     "build": "node ./scripts/build.mjs",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
-    "start:local": "docker compose up -d && docker compose watch",
+    "start:local": "docker compose up -d --build backend && docker compose watch",
     "start": "nest start",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -139,7 +139,8 @@
       "^@lib/metrics(|/.*)$": "<rootDir>/libs/metrics/src/$1",
       "^@lib/dtos(|/.*)$": "<rootDir>/libs/dtos/src/$1",
       "^@lib/guards(|/.*)$": "<rootDir>/libs/guards/src/$1",
-      "^@lib/rate.limiter(|/.*)$": "<rootDir>/libs/rate.limiter/src/$1"
+      "^@lib/rate.limiter(|/.*)$": "<rootDir>/libs/rate.limiter/src/$1",
+      "^@lib/redis(|/.*)$": "<rootDir>/libs/redis/src/$1"
     }
   }
 }

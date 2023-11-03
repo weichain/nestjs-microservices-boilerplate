@@ -1,5 +1,5 @@
 import { RedisHealthIndicator } from '@liaoliaots/nestjs-redis-health';
-import { Config } from '@lib/config';
+import { RedisService } from '@lib/redis';
 import { Logger } from '@nestjs/common';
 import { HealthCheckError, HealthIndicatorResult } from '@nestjs/terminus';
 import Redis from 'ioredis';
@@ -15,7 +15,7 @@ export class RedisIndicator extends BaseHealthIndicator {
     private readonly redisIndicator: RedisHealthIndicator,
   ) {
     super();
-    this.redis = new Redis({ host: Config.REDIS_HOST, port: Config.REDIS_PORT, password: Config.REDIS_PASSWORD });
+    this.redis = RedisService.getNewClient();
     this.name = name;
   }
 

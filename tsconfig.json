@@ -52,7 +52,9 @@
       "@lib/guards": ["libs/guards/src"],
       "@lib/guards/*": ["libs/guards/src/*"],
       "@lib/rate.limiter": ["libs/rate.limiter/src"],
-      "@lib/rate.limiter/*": ["libs/rate.limiter/src/*"]
+      "@lib/rate.limiter/*": ["libs/rate.limiter/src/*"],
+      "@lib/redis": ["libs/redis/src"],
+      "@lib/redis/*": ["libs/redis/src/*"]
     }
   },
   "watchOptions": {
