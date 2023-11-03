@@ -1,3 +1,4 @@
+import { enableDevtools } from '@lib/common';
 import { Config } from '@lib/config';
 import { GlobalExceptionFilter } from '@lib/filters';
 import { AuditLoggerInterceptor, HttpResponseInterceptor, TimeoutInterceptor } from '@lib/interceptors';
@@ -14,6 +15,8 @@ const logger = new Logger(GatewayModule.name);
 
 async function bootstrap() {
   const port = Config.GATEWAY_SERVICE_PORT;
+
+  enableDevtools();
 
   const app = await NestFactory.create(GatewayModule, {
     bufferLogs: true,

@@ -5,6 +5,7 @@ services:
     extends:
       file: ./docker/redis/docker-compose.yaml
       service: redis
+    container_name: redis
   mongodb:
     extends:
       file: ./docker/mongodb/docker-compose.yaml
@@ -14,6 +15,7 @@ services:
       MONGO_REPLICA_HOST: mongodb # use the service name as the host because it's in the same Docker network
   backend:
     container_name: microservices
+    restart: unless-stopped
     environment:
       NODE_ENV: development
       MAIN_DATABASE_URI: mongodb://root:root@mongodb:27018/localdb?authSource=admin
