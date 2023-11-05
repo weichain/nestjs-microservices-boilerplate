@@ -133,6 +133,9 @@ devDependencies:
   '@types/jest':
     specifier: 29.5.5
     version: 29.5.5
+  '@types/lodash':
+    specifier: 4.14.200
+    version: 4.14.200
   '@types/luxon':
     specifier: 3.3.2
     version: 3.3.2
@@ -1690,6 +1693,10 @@ packages:
     dependencies:
       '@types/node': 20.8.2
     dev: false
+
+  /@types/lodash@4.14.200:
+    resolution: {integrity: sha512-YI/M/4HRImtNf3pJgbF+W6FrXovqj+T+/HpENLTooK9PnkacBsDpeP3IpHab40CClUfhNmdM2WTNP2sa2dni5Q==}
+    dev: true
 
   /@types/luxon@3.3.2:
     resolution: {integrity: sha512-l5cpE57br4BIjK+9BSkFBOsWtwv6J9bJpC7gdXIzZyI0vuKvNTk0wZZrkQxMGsUAuGW9+WMNWF2IJMD7br2yeQ==}

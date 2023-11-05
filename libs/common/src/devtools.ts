@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { findFreePorts } from 'find-free-ports';
+import { random } from 'lodash';
 import 'reflect-metadata';
 
 interface IDevtoolsOpts {
@@ -22,10 +23,6 @@ function importModuleInto<M extends INestJsModule>(targetModule: M, moduleToImpo
   Reflect.defineMetadata('imports', [moduleToImport, ...currentModules], targetModule);
 }
 
-function getRandomNumberBetween(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 const getFreePort = async (): Promise<number> => {
   const result = await findFreePorts.findFreePorts(1, {
     /**
@@ -35,7 +32,7 @@ const getFreePort = async (): Promise<number> => {
      * the issue when multiple services are started at the same time is that they can all try to use the same port
      * tl;dr we use random numbers to avoid conflicts between microservices
      */
-    startPort: getRandomNumberBetween(49252, 65535),
+    startPort: random(49252, 65534),
     endPort: 65535,
   });
   return result[0];
