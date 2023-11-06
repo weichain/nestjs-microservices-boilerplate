@@ -5,5 +5,6 @@ export * from './logger.module';
 
 export const useLogger = (app: INestApplication) => {
   app.useLogger(app.get(Logger));
+  // part of Pino
   app.useGlobalInterceptors(new LoggerErrorInterceptor());
 };

@@ -5,6 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { Microservices } from './constants';
+import { enableDevtools } from './devtools';
 
 interface IMicroserviceSetupOptions {
   port: number;
@@ -21,7 +22,9 @@ export async function microserviceSetup<M extends INestJsModule>(module: M, opti
   // sets the default options
   const { host = 'localhost', port, retryAttempts = 5, retryDelay = 250 } = options;
 
-  const app = await NestFactory.create(module);
+  enableDevtools();
+  const app = await NestFactory.create(module, { snapshot: true });
+
   useLogger(app);
 
   const serviceRegistry = app.get(ServiceRegistry);
