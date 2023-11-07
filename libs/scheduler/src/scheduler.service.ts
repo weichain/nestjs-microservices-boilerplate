@@ -48,7 +48,7 @@ export class SchedulerService implements OnModuleDestroy {
               } catch (error) {
                 this.logger.error(error, null, SchedulerService.name);
               } finally {
-                await sleep(1000);
+                await sleep(100);
                 await this.releaseLock(name);
               }
             }
