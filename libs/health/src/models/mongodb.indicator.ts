@@ -5,13 +5,13 @@ import { HealthCheckError, HealthIndicatorResult } from '@nestjs/terminus';
 import { BaseHealthIndicator } from './base.indicator';
 
 @Injectable()
-export class PrismaHealthIndicator extends BaseHealthIndicator {
+export class MongodbHealthIndicator extends BaseHealthIndicator {
   public readonly name: string;
-  public readonly logger = new Logger(PrismaHealthIndicator.name);
+  public readonly logger = new Logger(MongodbHealthIndicator.name);
 
   constructor(
-    name: string,
     private readonly prismaService: PrismaService,
+    name = MongodbHealthIndicator.name,
   ) {
     super();
     this.name = name;

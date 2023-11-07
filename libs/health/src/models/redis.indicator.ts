@@ -11,8 +11,8 @@ export class RedisIndicator extends BaseHealthIndicator {
   private readonly redis: Redis;
 
   constructor(
-    name = RedisIndicator.name,
     private readonly redisIndicator: RedisHealthIndicator,
+    name = RedisIndicator.name,
   ) {
     super();
     this.redis = RedisService.getNewClient();

@@ -5,8 +5,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Transport } from '@nestjs/microservices';
 import { HealthCheck, HealthCheckResult, HealthCheckService, MicroserviceHealthIndicator } from '@nestjs/terminus';
 import { IHealthIndicator } from './interfaces/health-indicator.interface';
-import { PrismaHealthIndicator } from './models/prisma.indicator';
-import { RedisIndicator } from './models/redis.indicator';
+import { MongodbHealthIndicator, RedisIndicator } from './models';
 
 @Injectable()
 export class HealthService {
@@ -21,10 +20,7 @@ export class HealthService {
     private readonly microservice: MicroserviceHealthIndicator,
     private readonly serviceRegistry: ServiceRegistry,
   ) {
-    this.listOfThingsToMonitor = [
-      new PrismaHealthIndicator(PrismaService.name, prisma),
-      new RedisIndicator(RedisIndicator.name, redisIndicator),
-    ];
+    this.listOfThingsToMonitor = [new MongodbHealthIndicator(prisma), new RedisIndicator(redisIndicator)];
   }
 
   @HealthCheck()
