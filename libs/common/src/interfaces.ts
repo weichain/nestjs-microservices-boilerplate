@@ -23,5 +23,3 @@ export interface ICustomException {
     message: string;
   };
 }
-
-export type NoArgNoReturnFunction = () => void;
