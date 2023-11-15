@@ -5,15 +5,13 @@ import { MongodbHealthIndicator } from './mongodb.indicator';
 import { RedisIndicator } from './redis.indicator';
 
 const getHealthProviders = () => {
-  return [
-    {
-      provide: HEALTH_INDICATORS,
-      useFactory: (prisma: PrismaService, redisIndicator: RedisHealthIndicator) => {
-        return [new MongodbHealthIndicator(prisma), new RedisIndicator(redisIndicator)];
-      },
-      inject: [PrismaService, RedisHealthIndicator],
+  return {
+    provide: HEALTH_INDICATORS,
+    useFactory: (prisma: PrismaService, redisIndicator: RedisHealthIndicator) => {
+      return [new MongodbHealthIndicator(prisma), new RedisIndicator(redisIndicator)];
     },
-  ];
+    inject: [PrismaService, RedisHealthIndicator],
+  };
 };
 
 export const HealthProviders = getHealthProviders();

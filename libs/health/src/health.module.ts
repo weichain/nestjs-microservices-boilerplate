@@ -9,7 +9,7 @@ import { HealthProviders } from './models';
 
 @Module({
   imports: [ServiceRegistryModule, PrismaModule, TerminusModule, RedisHealthModule],
-  providers: [HealthService, ...HealthProviders],
+  providers: [HealthService, HealthProviders],
   exports: [HealthService],
   controllers: [HealthController],
 })
