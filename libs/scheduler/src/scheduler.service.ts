@@ -32,7 +32,7 @@ export class SchedulerService implements OnModuleDestroy {
 
   public addTask(name: string, cronTime: string | Date | DateTime, func: () => Promise<void>) {
     try {
-      const job = new CronJob({
+      const job = CronJob.from({
         cronTime,
         timeZone: 'UTC',
         onTick: () => {
