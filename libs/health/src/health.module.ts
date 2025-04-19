@@ -5,10 +5,11 @@ import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './health.controller';
 import { HealthService } from './health.service';
+import { HealthProviders } from './models';
 
 @Module({
   imports: [ServiceRegistryModule, PrismaModule, TerminusModule, RedisHealthModule],
-  providers: [HealthService],
+  providers: [HealthService, HealthProviders],
   exports: [HealthService],
   controllers: [HealthController],
 })

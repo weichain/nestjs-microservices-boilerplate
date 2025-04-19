@@ -1,33 +1,25 @@
-import { RedisHealthIndicator } from '@liaoliaots/nestjs-redis-health';
-import { PrismaService } from '@lib/prisma';
+import { HEALTH_INDICATORS } from '@lib/common';
 import { ServiceRegistry } from '@lib/service.registry';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Transport } from '@nestjs/microservices';
 import { HealthCheck, HealthCheckResult, HealthCheckService, MicroserviceHealthIndicator } from '@nestjs/terminus';
-import { IHealthIndicator } from './interfaces/health-indicator.interface';
-import { MongodbHealthIndicator, RedisIndicator } from './models';
 
 @Injectable()
 export class HealthService {
-  private readonly listOfThingsToMonitor: IHealthIndicator[];
   private readonly logger = new Logger(HealthService.name);
 
   constructor(
-    prisma: PrismaService,
-    redisIndicator: RedisHealthIndicator,
-
+    @Inject(HEALTH_INDICATORS) private readonly healthIndicators,
     private readonly health: HealthCheckService,
     private readonly microservice: MicroserviceHealthIndicator,
     private readonly serviceRegistry: ServiceRegistry,
-  ) {
-    this.listOfThingsToMonitor = [new MongodbHealthIndicator(prisma), new RedisIndicator(redisIndicator)];
-  }
+  ) {}
 
   @HealthCheck()
   public async check(): Promise<HealthCheckResult[]> {
     const results: HealthCheckResult[] = [];
 
-    for (const apiIndicator of this.listOfThingsToMonitor) {
+    for (const apiIndicator of this.healthIndicators) {
       const isHealthy = await this.health.check([
         async () => {
           try {
